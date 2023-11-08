@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
 
+.list-container {
+    display: inline-block;
+    padding: 10px;
+    margin: 10px;
+}
+
+.list-container h2 {
+    font-weight: bold;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    cursor: pointer;
+}
+
+li.completed {
+    text-decoration: line-through;
+}
+
+</style>
+</head>
+<body>
+    <h1>Grocery List Manager</h1>
+    <div id="app">
+        <div class="list-container">
+            <h2>All Items:</h2>
+            <ul id="allItemsList"></ul>
+        </div>
+        <div class="list-container">
+            <h2>Purchased Items:</h2>
+            <ul id="purchasedItemsList"></ul>
+        </div>
+        <div class="list-container">
+            <h2>Items left to be Purchased:</h2>
+            <ul id="leftToPurchaseList"></ul>
+        </div>
+        <div class="input-container">
+            <input type="text" id="itemInput" placeholder="Add an item">
+            <button onclick="addItem()">Add</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+    <script>
+        const itemInput = document.getElementById('itemInput');
+const allItemsList = document.getElementById('allItemsList');
+const leftToPurchaseList = document.getElementById('leftToPurchaseList');
+const purchasedItemsList = document.getElementById('purchasedItemsList');
+const groceryList = [];
+
+function addItem() {
+    const newItem = itemInput.value.trim();
+    if (newItem !== '') {
+        groceryList.push({ name: newItem, purchased: false });
+        itemInput.value = '';
+        updateLists();
+    }
+}
+
+function toggleItem(index) {
+    groceryList[index].purchased = !groceryList[index].purchased;
+    updateLists();
+}
+
+function updateLists() {
+    allItemsList.innerHTML = '';
+    leftToPurchaseList.innerHTML = '';
+    purchasedItemsList.innerHTML = '';
+
+    groceryList.forEach((item, index) => {
+        const listItem = document.createElement('li');
+        if (item.purchased) {
+            const s = document.createElement('s');
+            s.textContent = item.name;
+            listItem.appendChild(s);
+            listItem.classList.add('completed');
+            listItem.addEventListener('click', () => toggleItem(index));
+            purchasedItemsList.appendChild(listItem);
+        } else {
+            listItem.textContent = item.name;
+            listItem.addEventListener('click', () => toggleItem(index));
+            leftToPurchaseList.appendChild(listItem);
+        }
+        allItemsList.appendChild(listItem.cloneNode(true));
+    });
+}
+updateLists();
+    </script>
+</html>
